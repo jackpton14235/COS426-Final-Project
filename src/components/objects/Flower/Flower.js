@@ -1,4 +1,4 @@
-import { Group } from 'three';
+import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Vector3 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min.js';
 import MODEL from './flower.gltf';
@@ -21,8 +21,23 @@ class Flower extends Group {
 
         this.name = 'flower';
         loader.load(MODEL, (gltf) => {
+            const NUM_FISH = 10;
+            let count = 0;
+            while (count < NUM_FISH) {
             this.add(gltf.scene);
+            const pos = new Vector3(
+                Math.random(),
+                Math.random(),
+                Math.random()
+            ).multiplyScalar(50);
+            gltf.scene.position.set(pos.x, pos.y, pos.z);
+            count++;
+            }
         });
+
+
+
+    
 
         // Add self to parent's update list
         parent.addToUpdateList(this);

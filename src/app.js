@@ -7,17 +7,19 @@
  *
  */
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { SeedScene } from 'scenes';
+import { UnderwaterScene } from 'scenes';
+import Controls from './components/Controls';
+
+const IS_SHARK = true;
 
 // Initialize core ThreeJS components
-const scene = new SeedScene();
 const camera = new PerspectiveCamera();
+const scene = new UnderwaterScene(camera, IS_SHARK);
 const renderer = new WebGLRenderer({ antialias: true });
 
 // Set up camera
-camera.position.set(6, 3, -10);
-camera.lookAt(new Vector3(0, 0, 0));
+// camera.position.set(6, 3, -10);
+// camera.lookAt(new Vector3(0, 0, 0));
 
 // Set up renderer, canvas, and minor CSS adjustments
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -28,20 +30,18 @@ document.body.style.overflow = 'hidden'; // Fix scrolling
 document.body.appendChild(canvas);
 
 // Set up controls
-const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = true;
-controls.enablePan = false;
-controls.minDistance = 4;
-controls.maxDistance = 16;
-controls.update();
+console.log(window.innerWidth, window.innerHeight)
+const controls = new Controls(window.innerWidth, window.innerHeight);
+console.log(controls.windowSize.x);
+
 
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
-    controls.update();
     renderer.render(scene, camera);
-    scene.update && scene.update(timeStamp);
+    scene.update && scene.update(timeStamp, IS_SHARK);
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
+console.log(controls.windowSize.x);
 window.requestAnimationFrame(onAnimationFrameHandler);
 
 // Resize Handler
@@ -50,6 +50,9 @@ const windowResizeHandler = () => {
     renderer.setSize(innerWidth, innerHeight);
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
+    controls.setWH();
 };
 windowResizeHandler();
 window.addEventListener('resize', windowResizeHandler, false);
+
+

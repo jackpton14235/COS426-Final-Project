@@ -1,9 +1,9 @@
 {
-  "name": "lower-case-dashed-name-of-project",
-  "repository": "REPOSITORY-NAME-AS-IT-APPEARS-IN-GITHUB-URL",
+  "name": "sharks-and-minnows",
+  "repository": "COS426-Final-Project",
   "version": "0.1.0",
-  "title": "PROJECT TITLE HERE",
-  "description": "SHORT DESCRIPTION OF PROJECT HERE. ONE TO TWO SENTENCES MAX",
+  "title": "Sharks and Minnows",
+  "description": "A multiplayer stealth game where a shark hunts a hungry fish.",
   "keywords": [
     "Princeton",
     "graphics",
