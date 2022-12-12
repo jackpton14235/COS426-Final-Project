@@ -34,14 +34,15 @@ class Container extends Group {
                 this.state.boost = true;
             }
             if(e.key == 'Shift' ) {
-                this.viewChange = true;
+                console.log("HERE")
+                this.state.viewChange = true;
             }
         });
 
 
        window.addEventListener('keyup', e => {
            if(e.key == 'Shift') {
-               this.viewChange = false;
+               this.state.viewChange = false;
            }
            if (e.key === ' ') 
            {
@@ -52,7 +53,7 @@ class Container extends Group {
 
     }
 
-    update(timeStamp, isShark, opponentPos, opponentRot) {
+    update(timeStamp, isShark, opponentPos, opponentRot, cameraChanger) {
         if (!isShark){
             this.rotateY(-this.state.moveX / 100);
             const fishForward = new Vector3();
@@ -61,7 +62,12 @@ class Container extends Group {
             this.position.add(fishForward);
 
             const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 1) * (Math.PI / 10));
-            this.state.fish.update(timeStamp, isShark, maxTiltDown)
+            this.state.fish.update(timeStamp, isShark, maxTiltDown);
+            if (this.state.viewChange) {
+                cameraChanger.toOverhead();
+            } else {
+                cameraChanger.toFish();
+            }
         }  else {
             // update from server
             this.position.copy(opponentPos);

@@ -30,10 +30,10 @@ class SharkContainer extends Group {
 
     update(timeStamp, isShark, opponentPos, opponentRot) {
         if (isShark) {
-            this.rotateY(-this.state.moveX / 100);
+            this.rotateY(-this.state.moveX / 40);
             const sharkForward = new Vector3();
             this.state.shark.getWorldDirection(sharkForward);
-            sharkForward.multiplyScalar(0.09);
+            sharkForward.multiplyScalar(0.20);
             this.position.add(sharkForward);
 
             const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 1) * (Math.PI / 10));

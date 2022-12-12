@@ -61,7 +61,7 @@ class Shark extends Group {
 
     update(timeStamp, isShark, maxTiltDown) {
         if (isShark) {
-            this.rotateX(-this.state.moveY / 100);
+            this.rotateX(-this.state.moveY / 50);
             if (this.rotation.x > maxTiltDown) {
                 this.rotation.x = maxTiltDown;
             }

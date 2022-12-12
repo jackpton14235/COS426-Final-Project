@@ -46,7 +46,6 @@ class School extends Group {
                 const fish = gltf.scene.clone();
                 fish.position.set(pos.x,pos.y,pos.z);
                 this.add(fish);
-                console.log(fish)
                 count++;
             }
         });

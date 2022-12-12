@@ -6,18 +6,48 @@
  * handles window resizes.
  *
  */
-import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
+import { WebGLRenderer, PerspectiveCamera, Vector3, OrthographicCamera, Camera } from 'three';
 import { UnderwaterScene } from 'scenes';
 import Controls from './components/Controls';
 import Online from './components/online';
+import HUD from './components/HUD';
 
-const IS_SHARK = false;//Math.random() < .5;
+// const IS_SHARK = true;//Math.random() < .5;
 
-const online = new Online();
+class CameraChanger {
+    constructor (shark, fish, overhead) {
+        this.shark = shark;
+        this.fish = fish;
+        this.overhead = overhead;
+        this.active = shark;
+    }
+
+    toShark() {
+        this.active = this.shark;
+    }
+
+    toFish() {
+        this.active = this.fish;
+    }
+
+    toOverhead() {
+        this.active = this.overhead;
+    }
+}
+
 
 // Initialize core ThreeJS components
-const camera = new PerspectiveCamera();
-const scene = new UnderwaterScene(camera, IS_SHARK, online);
+const sharkCam = new PerspectiveCamera();
+const fishCam = new PerspectiveCamera();
+const overheadCam = new OrthographicCamera(-50, 50, 50, -50, 1, 100);
+overheadCam.position.set(0, 30, 0);
+overheadCam.lookAt(0,0,0);
+const cc = new CameraChanger(sharkCam, fishCam, overheadCam);
+
+const hud = new HUD();
+const online = new Online(hud, cc);
+
+const scene = new UnderwaterScene(cc, online, hud);
 const renderer = new WebGLRenderer({ antialias: true });
 
 // Set up camera
@@ -40,8 +70,8 @@ console.log(controls.windowSize.x);
 
 // Render loop
 const onAnimationFrameHandler = (timeStamp) => {
-    renderer.render(scene, camera);
-    scene.update && scene.update(timeStamp, IS_SHARK);
+    renderer.render(scene, cc.active);
+    scene.update && scene.update(timeStamp);
     window.requestAnimationFrame(onAnimationFrameHandler);
 };
 console.log(controls.windowSize.x);

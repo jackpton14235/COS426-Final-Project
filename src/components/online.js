@@ -1,20 +1,18 @@
-import { Euler, Vector3 } from "three";
+import { Euler, TriangleFanDrawMode, Vector3 } from "three";
 
 class Online {
-    constructor() {
-        this.socket = new WebSocket('ws://10.9.150.108:7777');
+    constructor(hud, cameraChanger) {
+        this.hud = hud;
+        this.socket = new WebSocket('ws://localhost:7777');
         this.seed = 0;
         this.inGame = false;
         this.opponentPos = new Vector3(0,0,0);
         this.opponentRot = new Euler(0,0,0);
+        this.isShark = Math.random() < .5;
+        this.cameraChanger = cameraChanger;
 
         this.socket.addEventListener('open', (e) => this.onopen(e));
         this.socket.addEventListener('message', (e) => this.onmessage(e));
-
-        this.text = document.createElement('h2');
-        this.text.innerHTML = "Connecting...";
-        this.text.style = 'position:absolute;margin-left:1rem;color:#ff2222;'
-        document.querySelector('body').appendChild(this.text);
     }
 
     startGame() {
@@ -71,12 +69,13 @@ class Online {
             case 'wait':
                 // display wait message
                 console.log('Waiting for opponent');
-                this.text.innerHTML = 'Waiting for opponent';
+                this.hud.setOnlineStatus('Waiting for opponent');
                 break;
             case 'start':
                 this.seed = json.seed;
                 this.inGame = true;
-                this.text.innerHTML = `In lobby ${this.seed}`;
+                this.hud.setOnlineStatus(`In lobby ${this.seed}`);
+                this.buildFromSeed(json.seed, json.id);
                 console.log('starting', this.seed);
                 break;
             case 'coords': {
@@ -90,13 +89,58 @@ class Online {
             }
             case 'otherDisconnect':
                 this.inGame = false;
-                this.text.innerHTML = 'Waiting for opponent';
+                this.hud.setOnlineStatus('Waiting for opponent');
                 this.startGame();
+            case 'sharkWin':
+                this.hud.setMainText('Shark Wins!');
+                break;
             default:
                 console.log('action not recognized:', json.action);
                 break;
         }
     }
+
+    buildFromSeed(seed, id) {
+        this.isShark = seed % 2 === id;
+        this.hud.setSharkStatus(this.isShark);
+        console.log("Chosen as", this.isShark? "shark" : "fish")
+        if (this.isShark) {
+            this.cameraChanger.toShark();
+        } else {
+            this.cameraChanger.toFish();
+        }
+        const rand = new Rand(seed);
+    }
 }
+
+class Rand {
+    constructor(seed) {
+        this.seed = seed;
+        this.curr = seed;
+    }
+
+    getNext() {
+        this.curr = Rand.hashCode(this.curr.toString());
+        return 1 + this.curr / 2147483647;
+    }
+
+    setSeed(seed) {
+        this.seed = seed;
+        this.curr = seed;
+    }
+
+    // hash function from https://stackoverflow.com/questions/6122571/simple-non-secure-hash-function-for-javascript
+    static hashCode(str) {
+        let hash = 0;
+        for (let i = 0, len = str.length; i < len; i++) {
+            let chr = str.charCodeAt(i);
+            hash = (hash << 5) - hash + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+    }
+}
+
+
 
 export default Online;

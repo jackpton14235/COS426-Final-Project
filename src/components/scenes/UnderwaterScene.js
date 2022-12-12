@@ -150,7 +150,7 @@ function Cube() {
 }
 
 class UnderwaterScene extends Scene {
-    constructor(camera, isShark, online) {
+    constructor(cameraChanger, online, hud) {
         // Call parent Scene() constructor
         super();
 
@@ -184,6 +184,7 @@ class UnderwaterScene extends Scene {
                     value: this.fog.far,
                 },
             },
+            cameraChanger,
             online: online
         };
 
@@ -193,11 +194,11 @@ class UnderwaterScene extends Scene {
         // Add meshes to scene
         const oceanFloor = OceanFloor(this.state.uniforms);
         const lights = new BasicLights();
-        const shark = new SharkContainer(this, isShark && camera);
+        const shark = new SharkContainer(this, cameraChanger.shark);
         shark.position.y = 10;
         this.state.shark = shark;
         
-        const fish = new Container(this, !isShark && camera);
+        const fish = new Container(this, cameraChanger.fish);
         fish.position.y = 10;
         this.state.fish = fish;
        // const SCHOOLS_FISH = 20;
@@ -221,9 +222,10 @@ class UnderwaterScene extends Scene {
         this.add(oceanFloor, shark, fish, lights, food, school);
 
         // add colliders
-        const sharkFishCollider = new SphereCollider(shark, new Vector3(0,0,0), 1.5, fish, new Vector3(0,0,0), 1, () => {
+        const sharkFishCollider = new SphereCollider(shark, new Vector3(0,0,1), 1.5, fish, new Vector3(0,0,0), 1, () => {
             console.log("Fish eaten");
             online.sharkWin();
+            hud.setMainText("Shark Wins!");
         }, true);
         this.state.colliders.push(sharkFishCollider);
 
@@ -239,6 +241,7 @@ class UnderwaterScene extends Scene {
                     console.log("Fish food");
                     food.children[i].visible = false;
                     online.score();
+                    hud.incrementScore();
                 },
                 true
             );
@@ -251,17 +254,17 @@ class UnderwaterScene extends Scene {
         this.state.updateList.push(object);
     }
 
-    update(timeStamp, isShark) {
+    update(timeStamp) {
         const { updateList, online, uniforms, shark, fish, colliders } = this.state;
         uniforms.iTime.value = 1.5 * timeStamp / 1000;
 
         // Call update for each object in the updateList
         for (const obj of updateList) {
-            obj.update(timeStamp, isShark, online.opponentPos, online.opponentRot);
+            obj.update(timeStamp, online.isShark, online.opponentPos, online.opponentRot, this.state.cameraChanger);
         }
         // send coordinates to server to update position for other client
         if (online.inGame)
-            if (isShark)
+            if (online.isShark)
                 online.sendCoords(shark.position, shark.rotation);
             else
                 online.sendCoords(fish.position, fish.rotation);
