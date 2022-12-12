@@ -52,15 +52,21 @@ class Container extends Group {
 
     }
 
-    update(timeStamp, isShark) {
-        this.rotateY(-this.state.moveX / 100);
-        const fishForward = new Vector3();
-        this.state.fish.getWorldDirection(fishForward);
-        fishForward.multiplyScalar(this.state.boost? .1 : .05);
-        this.position.add(fishForward);
+    update(timeStamp, isShark, opponentPos, opponentRot) {
+        if (!isShark){
+            this.rotateY(-this.state.moveX / 100);
+            const fishForward = new Vector3();
+            this.state.fish.getWorldDirection(fishForward);
+            fishForward.multiplyScalar(this.state.boost? .0 : .15);
+            this.position.add(fishForward);
 
-        const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 1) * (Math.PI / 10));
-        this.state.fish.update(timeStamp, isShark, maxTiltDown)
+            const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 1) * (Math.PI / 10));
+            this.state.fish.update(timeStamp, isShark, maxTiltDown)
+        }  else {
+            // update from server
+            this.position.copy(opponentPos);
+            this.rotation.copy(opponentRot);
+        }
     }
 }
 

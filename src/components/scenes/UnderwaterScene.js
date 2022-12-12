@@ -111,7 +111,7 @@ const sandShader = `
         float noise = .2 * Pseudo3dNoise(vec3(uv/.0007, iTime));
         fragColor = tex + noise;
         // add fog
-        fragColor.rgb = mix( fragColor.rgb, fogColor, fogFactor );
+        fragColor.rgb = mix(fragColor.rgb, fogColor, fogFactor);
     }
 
     varying vec2 vUv;
@@ -143,7 +143,7 @@ function Cube() {
 }
 
 class UnderwaterScene extends Scene {
-    constructor(camera, isShark) {
+    constructor(camera, isShark, online) {
         // Call parent Scene() constructor
         super();
 
@@ -176,6 +176,7 @@ class UnderwaterScene extends Scene {
                     value: this.fog.far,
                 },
             },
+            online: online
         };
 
         // Set background to a nice color
@@ -186,8 +187,10 @@ class UnderwaterScene extends Scene {
         const lights = new BasicLights();
         const shark = new SharkContainer(this, isShark && camera);
         shark.position.y = 10;
+        this.state.shark = shark;
         const fish = new Container(this, !isShark && camera);
         fish.position.y = 10;
+        this.state.fish = fish;
         const school = new School(
             this,
             new BoxGeometry(0.4, 0.4, 0.4),
@@ -203,13 +206,19 @@ class UnderwaterScene extends Scene {
     }
 
     update(timeStamp, isShark) {
-        const { updateList } = this.state;
-        this.state.uniforms.iTime.value = 1.5 * timeStamp / 1000;
-        // console.log(this.state.uniforms.iTime)
+        const { updateList, online, uniforms, shark, fish } = this.state;
+        uniforms.iTime.value = 1.5 * timeStamp / 1000;
+
         // Call update for each object in the updateList
         for (const obj of updateList) {
-            obj.update(timeStamp, isShark);
+            obj.update(timeStamp, isShark, online.opponentPos, online.opponentRot);
         }
+        // send coordinates to server to update position for other client
+        if (online.inGame)
+            if (isShark)
+                online.sendCoords(shark.position, shark.rotation);
+            else
+                online.sendCoords(fish.position, fish.rotation);
     }
 }
 

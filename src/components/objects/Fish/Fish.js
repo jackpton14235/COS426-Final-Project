@@ -85,8 +85,6 @@ class Fish extends Group {
             //     console.log("There")
             // }
             // this.rotation.z = 0;
-        } else {
-            // update from server
         }
     }
 }

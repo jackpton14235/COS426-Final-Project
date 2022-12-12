@@ -9,12 +9,15 @@
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { UnderwaterScene } from 'scenes';
 import Controls from './components/Controls';
+import Online from './components/online';
 
-const IS_SHARK = true;
+const IS_SHARK = Math.random() < .5;
+
+const online = new Online();
 
 // Initialize core ThreeJS components
 const camera = new PerspectiveCamera();
-const scene = new UnderwaterScene(camera, IS_SHARK);
+const scene = new UnderwaterScene(camera, IS_SHARK, online);
 const renderer = new WebGLRenderer({ antialias: true });
 
 // Set up camera

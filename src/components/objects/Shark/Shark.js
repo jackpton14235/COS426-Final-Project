@@ -53,11 +53,7 @@ class Shark extends Group {
             if (this.rotation.x > maxTiltDown) {
                 this.rotation.x = maxTiltDown;
             }
-        } else {
-            // update from server
         }
-        
-        
     }
 }
 
