@@ -201,17 +201,19 @@ class UnderwaterScene extends Scene {
         const fish = new Container(this, cameraChanger.fish);
         fish.position.y = 10;
         this.state.fish = fish;
-       // const SCHOOLS_FISH = 20;
-        //var i = 0;
-       // while(i < SCHOOLS_FISH) {
-        const school = new School(
-            this,
-            new BoxGeometry(0.4, 0.4, 0.4),
-            new MeshBasicMaterial({ color: 0x663377 })
-        );
-          //  this.add(school);
-         //   i++;
-       // }
+        const SCHOOLS_FISH = 20;
+        var i = 0;
+        while(i < SCHOOLS_FISH) {
+            const school = new School(
+                this,
+                new BoxGeometry(0.4, 0.4, 0.4),
+                new MeshBasicMaterial({ color: 0x663377 }),
+                (2 * Math.random() - 1) * 200
+            );
+            this.add(school);
+            // console.log(' here ' + school.children[0]);
+            i++;
+        }
 
         const food = new Food(
             this,
