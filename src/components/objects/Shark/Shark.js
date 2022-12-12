@@ -1,6 +1,6 @@
 import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Vector3 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-// import MODEL from './shark.gltf';
+import MODEL from 'src/components/objects/Shark/sharkChar/scene.gltf';
 
 const MAX_TILT = Math.PI / 4;
 
@@ -15,12 +15,12 @@ class Shark extends Group {
             moveY: 0
         };
 
-        // Load object
+        // Load object TODO: GIVE CREDIT
         const loader = new GLTFLoader();
-        // loader.load(, (gltf) => {
-        //    this.add(gltf.scene);
-         //   gltf.scene.position.set(10,10,10);
-       // });
+        loader.load('./sharkChar/scene.gltf', (gltf) => {
+           this.add(gltf.scene);
+           gltf.scene.position.set(10,10,10);
+        });
 
         this.name = 'shark';
         // });
