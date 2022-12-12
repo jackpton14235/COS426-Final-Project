@@ -1,6 +1,6 @@
 import { Group, Vector3 } from "three";
 import Shark from "./Shark";
-import MODEL from './shark.gltf';
+
 
 const MAX_TILT = Math.PI / 4;
  
