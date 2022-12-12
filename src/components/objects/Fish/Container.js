@@ -57,7 +57,7 @@ class Container extends Group {
             this.rotateY(-this.state.moveX / 100);
             const fishForward = new Vector3();
             this.state.fish.getWorldDirection(fishForward);
-            fishForward.multiplyScalar(this.state.boost? .0 : .15);
+            fishForward.multiplyScalar(this.state.boost? .50 : .15);
             this.position.add(fishForward);
 
             const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 1) * (Math.PI / 10));

@@ -2,7 +2,7 @@ import { Euler, Vector3 } from "three";
 
 class Online {
     constructor() {
-        this.socket = new WebSocket('ws://localhost:7777');
+        this.socket = new WebSocket('ws://10.9.150.108:7777');
         this.seed = 0;
         this.inGame = false;
         this.opponentPos = new Vector3(0,0,0);
@@ -33,13 +33,31 @@ class Online {
         }}))
     }
 
+    sharkWin() {
+        this.socket.send(
+            JSON.stringify({
+                action: 'sharkWin',
+                id: this.seed
+            })
+        )
+    }
+
+    score() {
+        this.socket.send(
+            JSON.stringify({
+                action: 'score',
+                id: this.seed
+            })
+        )
+    }
+
     onopen(event) {
         console.log("Opened")
     }
 
     onmessage(event) {
         let json;
-        console.log(event.data)
+        // console.log(event.data)
         try {
             json = JSON.parse(event.data);
         } catch {
@@ -64,6 +82,10 @@ class Online {
             case 'coords': {
                 this.opponentPos = new Vector3(json.coords.pos.x, json.coords.pos.y, json.coords.pos.z);
                 this.opponentRot = new Euler(json.coords.rot.x, json.coords.rot.y, json.coords.rot.z)
+                break;
+            }
+            case 'score': {
+                // update hud
                 break;
             }
             case 'otherDisconnect':

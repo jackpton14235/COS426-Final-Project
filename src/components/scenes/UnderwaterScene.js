@@ -7,6 +7,7 @@ import {
     Mesh,
     FrontSide,
     BoxGeometry,
+    SphereGeometry,
     MeshBasicMaterial,
     Vector3,
     ShaderMaterial,
@@ -15,11 +16,16 @@ import {
     RepeatWrapping,
     Fog,
 } from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Flower, Land, Shark, Fish } from 'objects';
 import { BasicLights } from 'lights';
 import { School } from '../objects/School';
+import { Food } from '../objects/Food';
 import Container from '../objects/Fish/Container';
 import SharkContainer from '../objects/Shark/SharkContainer';
+import SphereCollider from '../SphereCollider';
+const sand = require('./sand.jpg');
+
 
 const FOG_COLOR = 0x0083bf;
 
@@ -112,6 +118,7 @@ const sandShader = `
         fragColor = tex + noise;
         // add fog
         fragColor.rgb = mix(fragColor.rgb, fogColor, fogFactor);
+        fragColor = vec4(fragColor.rgb, 1.);
     }
 
     varying vec2 vUv;
@@ -148,7 +155,7 @@ class UnderwaterScene extends Scene {
         super();
 
         const loader = new TextureLoader();
-        const sandTexture = loader.load('./src/components/scenes/sand.jpg');
+        const sandTexture = loader.load(sand);
         sandTexture.minFilter = NearestFilter;
         sandTexture.magFilter = NearestFilter;
         sandTexture.wrapS = RepeatWrapping;
@@ -159,6 +166,7 @@ class UnderwaterScene extends Scene {
         this.state = {
             gui: new Dat.GUI(), // Create GUI for scene
             updateList: [],
+            colliders: [],
             uniforms: {
                 iTime: { value: 0 },
                 iResolution: { value: new Vector3(1, 1, 1) },
@@ -188,16 +196,54 @@ class UnderwaterScene extends Scene {
         const shark = new SharkContainer(this, isShark && camera);
         shark.position.y = 10;
         this.state.shark = shark;
+        
         const fish = new Container(this, !isShark && camera);
         fish.position.y = 10;
         this.state.fish = fish;
+       // const SCHOOLS_FISH = 20;
+        //var i = 0;
+       // while(i < SCHOOLS_FISH) {
         const school = new School(
             this,
             new BoxGeometry(0.4, 0.4, 0.4),
             new MeshBasicMaterial({ color: 0x663377 })
         );
-        const flower = new Flower(this);
-        this.add(oceanFloor, shark, fish, lights, school, flower);
+          //  this.add(school);
+         //   i++;
+       // }
+
+        const food = new Food(
+            this,
+            fish,
+            new SphereGeometry( 0.2, 0.2, 0.2 ),
+            new MeshBasicMaterial({ color: 0xFFD700 })
+        );
+        this.add(oceanFloor, shark, fish, lights, food, school);
+
+        // add colliders
+        const sharkFishCollider = new SphereCollider(shark, new Vector3(0,0,0), 1.5, fish, new Vector3(0,0,0), 1, () => {
+            console.log("Fish eaten");
+            online.sharkWin();
+        }, true);
+        this.state.colliders.push(sharkFishCollider);
+
+        for(let i = 0; i < food.children.length; i++) {
+            const fishFoodCollider = new SphereCollider(
+                fish, 
+                new Vector3(0,0,0), 
+                1.5, 
+                food.children[i], 
+                new Vector3(0,0,0), 
+                1, 
+                () => {
+                    console.log("Fish food");
+                    food.children[i].visible = false;
+                    online.score();
+                },
+                true
+            );
+            this.state.colliders.push(fishFoodCollider);
+        }
         
     }
 
@@ -206,7 +252,7 @@ class UnderwaterScene extends Scene {
     }
 
     update(timeStamp, isShark) {
-        const { updateList, online, uniforms, shark, fish } = this.state;
+        const { updateList, online, uniforms, shark, fish, colliders } = this.state;
         uniforms.iTime.value = 1.5 * timeStamp / 1000;
 
         // Call update for each object in the updateList
@@ -219,6 +265,8 @@ class UnderwaterScene extends Scene {
                 online.sendCoords(shark.position, shark.rotation);
             else
                 online.sendCoords(fish.position, fish.rotation);
+        
+        colliders.forEach(collider => collider.checkCollision())
     }
 }
 

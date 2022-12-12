@@ -33,7 +33,7 @@ class SharkContainer extends Group {
             this.rotateY(-this.state.moveX / 100);
             const sharkForward = new Vector3();
             this.state.shark.getWorldDirection(sharkForward);
-            sharkForward.multiplyScalar(0.05);
+            sharkForward.multiplyScalar(0.09);
             this.position.add(sharkForward);
 
             const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 1) * (Math.PI / 10));

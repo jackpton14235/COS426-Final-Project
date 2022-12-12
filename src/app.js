@@ -11,7 +11,7 @@ import { UnderwaterScene } from 'scenes';
 import Controls from './components/Controls';
 import Online from './components/online';
 
-const IS_SHARK = Math.random() < .5;
+const IS_SHARK = false;//Math.random() < .5;
 
 const online = new Online();
 

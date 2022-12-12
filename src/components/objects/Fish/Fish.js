@@ -1,6 +1,10 @@
 import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Vector3 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-// import MODEL from './shark.gltf';
+require('./fish/textures/fish_baseColor.png');
+require('./fish/scene.bin');
+const fishChar = require('./fish/scene.gltf');
+
+
 
 const MAX_TILT = Math.PI / 4;
  
@@ -23,9 +27,14 @@ class Fish extends Group {
         // });
         const geometry = new BoxGeometry(.4, .4, .4);
         const material = new MeshBasicMaterial({ color: 0x663377 });
-        const cube = new Mesh(geometry, material);
-        this.add(cube);
-
+        // const cube = new Mesh(geometry, material);
+        // this.add(cube);
+        // Load object TODO: GIVE CREDIT
+        const gltfLoader = new GLTFLoader();
+        gltfLoader.load(fishChar, (gltf) => {
+            gltf.scene.scale.set(.3,.3,.3)
+            this.add(gltf.scene);
+        });
         if (camera) {
             this.add(camera);
             camera.position.z = -10;

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Fish
+* source:	https://sketchfab.com/3d-models/fish-77730298c9c8481e9b54d98430e9723f
+* author:	shinanaa (https://sketchfab.com/shinanaa)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Fish" (https://sketchfab.com/3d-models/fish-77730298c9c8481e9b54d98430e9723f) by shinanaa (https://sketchfab.com/shinanaa) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

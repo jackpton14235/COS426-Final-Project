@@ -1,6 +1,13 @@
 import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Vector3 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import MODEL from 'src/components/objects/Shark/sharkChar/scene.gltf';
+// import MODEL from 'src/components/objects/Shark/sharkChar/scene.gltf';
+require('./sharkChar/scene.bin');
+//Put your textures here
+require('./sharkChar/textures/Material_2_baseColor.png');
+require('./sharkChar/textures/Material_2_metallicRoughness.png');
+require('./sharkChar/textures/Material_2_normal.png');
+const scene = require('./sharkChar/scene.gltf');
+
 
 const MAX_TILT = Math.PI / 4;
 
@@ -15,11 +22,15 @@ class Shark extends Group {
             moveY: 0
         };
 
+        this.name = 'shark';
+        
         // Load object TODO: GIVE CREDIT
         const loader = new GLTFLoader();
-        loader.load('./sharkChar/scene.gltf', (gltf) => {
-           this.add(gltf.scene);
-           gltf.scene.position.set(10,10,10);
+        loader.load(scene, (gltf) => {
+            console.log(gltf.scene)
+            this.add(gltf.scene);
+            gltf.scene.position.set(0,0,0);
+            gltf.scene.scale.set(100,100,100);
         });
 
         this.name = 'shark';
@@ -32,7 +43,8 @@ class Shark extends Group {
 
         if (camera) {
             this.add(camera);
-            camera.position.z = -10;
+            camera.position.y = 10;
+            camera.position.z = -25;
             camera.lookAt(new Vector3(0, 0, 0));
         }
         // this.position.y = 5;
