@@ -29,12 +29,18 @@ const audio = require('./food.mp3');
 const foodCollected = new Audio(audio);
 const audioTwo = require('./monsterbite.mp3');
 const sharkMusic = new Audio(audioTwo);
+const audioThree = require('./gameMusic.mp3');
+const gameMusic = new Audio(audioThree);
+gameMusic.loop = true;
+gameMusic.volume = 0.15;
 require('./fishMod/textures/Default_OBJ.001_baseColor.png');
 require('./fishMod/textures/Default_OBJ.001_metallicRoughness.png');
 require('./fishMod/textures/Default_OBJ.001_normal.png');
 require('./fishMod/textures/Eyes_baseColor.png');
 require('./fishMod/scene.bin');
 const fishChar = require('./fishMod/scene.gltf');
+
+
 
 const FOG_COLOR = 0x0083bf;
 
@@ -172,6 +178,7 @@ class UnderwaterScene extends Scene {
         // Init state
         this.state = {
             gui: new Dat.GUI(), // Create GUI for scene
+            Music: true,
             updateList: [],
             colliders: [],
             uniforms: {
@@ -197,6 +204,9 @@ class UnderwaterScene extends Scene {
 
         // Set background to a nice color
         this.background = new Color(FOG_COLOR);
+
+        // music ?
+        this.state.gui.add(this.state, 'Music');
 
         // Add meshes to scene
         const oceanFloor = OceanFloor(this.state.uniforms);
@@ -323,6 +333,13 @@ class UnderwaterScene extends Scene {
                 this.state.cameraChanger
             );
         }
+
+        gameMusic.play();
+        if(this.Music) {
+            console.log('heheh');
+            gameMusic.play();
+        }
+
         // send coordinates to server to update position for other client
         if (online.inGame)
             if (online.isShark)

@@ -37,7 +37,7 @@ class HUD {
     }
 
     setSharkStatus(b) {
-        console.log("SHark", b)
+        console.log("Shark", b)
         this.score.style.visibility = b ? 'hidden' : 'visible';
         this.isShark = b;
     }
