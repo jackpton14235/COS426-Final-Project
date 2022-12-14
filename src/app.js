@@ -33,14 +33,19 @@ class CameraChanger {
     toOverhead() {
         this.active = this.overhead;
     }
+
+    forEach(callback) {
+        callback(this.shark);
+        callback(this.fish);
+    }
 }
 
 
 // Initialize core ThreeJS components
 const sharkCam = new PerspectiveCamera();
 const fishCam = new PerspectiveCamera();
-const overheadCam = new OrthographicCamera(-50, 50, 50, -50, 1, 100);
-overheadCam.position.set(0, 30, 0);
+const overheadCam = new OrthographicCamera(-60, 60, 60, -60, 1, 100);
+overheadCam.position.set(0, 35, 0);
 overheadCam.lookAt(0,0,0);
 const cc = new CameraChanger(sharkCam, fishCam, overheadCam);
 
@@ -81,8 +86,8 @@ window.requestAnimationFrame(onAnimationFrameHandler);
 const windowResizeHandler = () => {
     const { innerHeight, innerWidth } = window;
     renderer.setSize(innerWidth, innerHeight);
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
+    cc.forEach(cam => cam.aspect = innerWidth / innerHeight);
+    cc.forEach(cam => cam.updateProjectionMatrix());
     controls.setWH();
 };
 windowResizeHandler();

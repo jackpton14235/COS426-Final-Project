@@ -25,7 +25,14 @@ import Container from '../objects/Fish/Container';
 import SharkContainer from '../objects/Shark/SharkContainer';
 import SphereCollider from '../SphereCollider';
 const sand = require('./sand.jpg');
-
+const audio = require('./food.mp3');
+const foodCollected = new Audio(audio);
+require('./fishMod/textures/Default_OBJ.001_baseColor.png');
+require('./fishMod/textures/Default_OBJ.001_metallicRoughness.png');
+require('./fishMod/textures/Default_OBJ.001_normal.png');
+require('./fishMod/textures/Eyes_baseColor.png');
+require('./fishMod/scene.bin');
+const fishChar = require('./fishMod/scene.gltf');
 
 const FOG_COLOR = 0x0083bf;
 
@@ -54,7 +61,6 @@ const tileShader = `
     }
 `;
 
-
 const vertexShader = `
   varying vec2 vUv;
   void main() {
@@ -62,7 +68,6 @@ const vertexShader = `
     gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
   }
 `;
-
 
 const sandShader = `
     #include <common>
@@ -185,7 +190,7 @@ class UnderwaterScene extends Scene {
                 },
             },
             cameraChanger,
-            online: online
+            online: online,
         };
 
         // Set background to a nice color
@@ -197,59 +202,98 @@ class UnderwaterScene extends Scene {
         const shark = new SharkContainer(this, cameraChanger.shark);
         shark.position.y = 10;
         this.state.shark = shark;
-        
+
         const fish = new Container(this, cameraChanger.fish);
         fish.position.y = 10;
         this.state.fish = fish;
-        const SCHOOLS_FISH = 20;
-        var i = 0;
-        while(i < SCHOOLS_FISH) {
-            const school = new School(
-                this,
-                new BoxGeometry(0.4, 0.4, 0.4),
-                new MeshBasicMaterial({ color: 0x663377 }),
-                (2 * Math.random() - 1) * 200
-            );
-            this.add(school);
-            // console.log(' here ' + school.children[0]);
-            i++;
-        }
 
-        const food = new Food(
-            this,
+        this.add(oceanFloor, shark, fish, lights);
+
+        // gets run once online game is ready so stuff can be generated
+        // using the given seed
+        online.onReady = (schoolPositions, foodPositions) => {
+            // load the fish model for schools
+            const gltfLoader = new GLTFLoader();
+            gltfLoader.load(fishChar, (gltf) => {
+                const SCHOOLS_FISH = 30;
+                gltf.scene.scale.set(0.005, 0.005, 0.005);
+
+                // create schools of fish
+                var i = 0;
+                while (i < SCHOOLS_FISH) {
+                    const school = new School(
+                        this,
+                        gltf.scene,
+                        schoolPositions[i]
+                    );
+                    this.add(school);
+                    i++;
+                }
+
+                // set fish and shark positions apart from each other
+                this.state.fish.position.copy(schoolPositions[0]);
+                let dist = 0;
+                let sharkPos = new Vector3(0, 0, 0);
+                while (dist < 20) {
+                    sharkPos.set(
+                        (Math.random() - 1) * 100,
+                        Math.random() * 25 + 2,
+                        (Math.random() - 1) * 100
+                    );
+                    dist = sharkPos.clone().sub(schoolPositions[0]).length();
+                }
+                this.state.shark.position.copy(sharkPos);
+
+                // add food to the scene
+                const food = new Food(
+                    this,
+                    fish,
+                    new SphereGeometry(0.2, 0.2, 0.2),
+                    new MeshBasicMaterial({ color: 0xffd700 }),
+                    foodPositions
+                );
+                this.add(food);
+
+                // add collider listener for food
+                for (let i = 0; i < food.children.length; i++) {
+                    const fishFoodCollider = new SphereCollider(
+                        fish,
+                        new Vector3(0, 0, 0),
+                        1.5,
+                        food.children[i],
+                        new Vector3(0, 0, 0),
+                        1,
+                        () => {
+                            console.log('Fish food');
+                            foodCollected.play();
+                            food.children[i].visible = false;
+                            online.score();
+                            hud.incrementScore();
+                        },
+                        true
+                    );
+                    this.state.colliders.push(fishFoodCollider);
+                }
+            });
+        };
+
+        // add collider for shark and fish
+        const sharkFishCollider = new SphereCollider(
+            shark,
+            new Vector3(0, 0, 1),
+            1.5,
             fish,
-            new SphereGeometry( 0.2, 0.2, 0.2 ),
-            new MeshBasicMaterial({ color: 0xFFD700 })
+            new Vector3(0, 0, 0),
+            1,
+            () => {
+                console.log('Fish eaten');
+                foodCollected.play();
+                online.sharkWin();
+                hud.setMainText('Shark Wins!');
+            },
+            true
         );
-        this.add(oceanFloor, shark, fish, lights, food);
-
-        // add colliders
-        const sharkFishCollider = new SphereCollider(shark, new Vector3(0,0,1), 1.5, fish, new Vector3(0,0,0), 1, () => {
-            console.log("Fish eaten");
-            online.sharkWin();
-            hud.setMainText("Shark Wins!");
-        }, true);
         this.state.colliders.push(sharkFishCollider);
-
-        for(let i = 0; i < food.children.length; i++) {
-            const fishFoodCollider = new SphereCollider(
-                fish, 
-                new Vector3(0,0,0), 
-                1.5, 
-                food.children[i], 
-                new Vector3(0,0,0), 
-                1, 
-                () => {
-                    console.log("Fish food");
-                    food.children[i].visible = false;
-                    online.score();
-                    hud.incrementScore();
-                },
-                true
-            );
-            this.state.colliders.push(fishFoodCollider);
-        }
-        
     }
 
     addToUpdateList(object) {
@@ -257,21 +301,33 @@ class UnderwaterScene extends Scene {
     }
 
     update(timeStamp) {
-        const { updateList, online, uniforms, shark, fish, colliders } = this.state;
-        uniforms.iTime.value = 1.5 * timeStamp / 1000;
+        const {
+            updateList,
+            online,
+            uniforms,
+            shark,
+            fish,
+            colliders,
+        } = this.state;
+        uniforms.iTime.value = (1.5 * timeStamp) / 1000;
 
         // Call update for each object in the updateList
         for (const obj of updateList) {
-            obj.update(timeStamp, online.isShark, online.opponentPos, online.opponentRot, this.state.cameraChanger);
+            obj.update(
+                timeStamp,
+                online.isShark,
+                online.opponentPos,
+                online.opponentRot,
+                this.state.cameraChanger
+            );
         }
         // send coordinates to server to update position for other client
         if (online.inGame)
             if (online.isShark)
                 online.sendCoords(shark.position, shark.rotation);
-            else
-                online.sendCoords(fish.position, fish.rotation);
-        
-        colliders.forEach(collider => collider.checkCollision())
+            else online.sendCoords(fish.position, fish.rotation);
+
+        colliders.forEach((collider) => collider.checkCollision());
     }
 }
 

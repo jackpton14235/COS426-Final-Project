@@ -89,18 +89,15 @@ class Fish extends Group {
         this.material.color.set(0x41bc66);
     }
 
-    update(timeStamp, isShark, maxTiltDown) {
+    update(timeStamp, isShark, maxTiltDown, maxTiltUp) {
         if (!isShark) {
             this.rotateX(-this.state.moveY / 100);
-            const maxTiltUp = -1 * MAX_TILT;
             if (this.rotation.x > maxTiltDown) {
                 this.rotation.x = maxTiltDown;
             }
-            // if (this.rotation.x < maxTiltUp) {
-            //     this.rotation.x = maxTiltUp;
-            //     console.log("There")
-            // }
-            // this.rotation.z = 0;
+            if (this.rotation.x < maxTiltUp) {
+                this.rotation.x = maxTiltUp;
+            }
         }
     }
 }

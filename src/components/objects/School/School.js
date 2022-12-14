@@ -1,60 +1,39 @@
 import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Vector3 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-require('./fish/textures/fish_baseColor.png');
-require('./fish/scene.bin');
-const fishChar = require('./fish/scene.gltf');
-require('./schoolFish/textures/Material_diffuse.png');
-require('./schoolFish/scene.bin');
-const schoolFishChar = require('./schoolFish/scene.gltf');
-
-const cubeFish = (geometry, material) => {
-    const cube = new Mesh(geometry, material);
-    return cube;
-};
+require('./fishMod/textures/Default_OBJ.001_baseColor.png');
+require('./fishMod/textures/Default_OBJ.001_metallicRoughness.png');
+require('./fishMod/textures/Default_OBJ.001_normal.png');
+require('./fishMod/textures/Eyes_baseColor.png');
+require('./fishMod/scene.bin');
+const fishChar = require('./fishMod/scene.gltf');
 
 class School extends Group {
-    constructor(parent, fishGeometry, fishMaterial) {
+    constructor(parent, model, pos) {
         // Call parent Group() constructor
         super();
 
         const NUM_FISH = 5; //20
         const BOX_SIZE = 5;
 
-        // const gltfLoader = new GLTFLoader();
-        // gltfLoader.load(fishChar, (gltf) => {
-        //     gltf.scene.scale.set(.3,.3,.3)
-        //     this.add(gltf.scene);
-        // });
+        let count = 0;
+        while (count < NUM_FISH) {
+            const pos = new Vector3(
+                Math.random() - .5,
+                Math.random() - .5,
+                Math.random() - .5
+            ).multiplyScalar(BOX_SIZE);
+            const fish = model.clone();
+            fish.position.copy(pos)
+            this.add(fish);
+            // console.log(fish)
+            count++;
+        }
 
-        const gltfLoader = new GLTFLoader();
-        gltfLoader.load(schoolFishChar, (gltf) => {
-            this.add(gltf.scene);
-            gltf.scene.scale.set(0.3, 0.3, 0.3);
-            // gltf.position.set(10,10,10);
-        
-
-            const geometry = gltf.scene.parent.geometry;
-            const material = gltf.scene.parent.material;
-            this.add(gltf.scene);
-            let count = 0;
-            while (count < NUM_FISH) {
-                const pos = new Vector3(
-                    Math.random(),
-                    Math.random(),
-                    Math.random()
-                ).multiplyScalar(BOX_SIZE);
-                const fish = gltf.scene.clone();
-                fish.position.set(pos.x,pos.y,pos.z);
-                this.add(fish);
-                count++;
-            }
-        });
-
-        this.position.y = 10;
+        this.position.copy(pos)
         this.name = 'school';
         // Add self to parent's update list
         parent.addToUpdateList(this);
-        console.log(this)
+        // console.log(this)
     }
 
     update(timeStamp, isShark) {

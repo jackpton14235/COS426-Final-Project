@@ -58,11 +58,11 @@ class Container extends Group {
             this.rotateY(-this.state.moveX / 100);
             const fishForward = new Vector3();
             this.state.fish.getWorldDirection(fishForward);
-            fishForward.multiplyScalar(this.state.boost? .50 : .15);
+            fishForward.multiplyScalar(this.state.boost? .1 : .05);
             this.position.add(fishForward);
 
             const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 1) * (Math.PI / 10));
-            const maxTiltUp = Math.min(-MAX_TILT, (30 - this.position.y) * (Math.PI / 10));
+            const maxTiltUp = Math.max(-MAX_TILT, (this.position.y - 30) * (Math.PI / 10));
             this.state.fish.update(timeStamp, isShark, maxTiltDown, maxTiltUp);
             if (this.state.viewChange) {
                 cameraChanger.toOverhead();

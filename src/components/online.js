@@ -10,6 +10,10 @@ class Online {
         this.opponentRot = new Euler(0,0,0);
         this.isShark = false;// Math.random() < .5;
         this.cameraChanger = cameraChanger;
+        this.onReady;
+
+        this.foodPositions = [];
+        this.schoolPositions = [];
 
         this.socket.addEventListener('open', (e) => this.onopen(e));
         this.socket.addEventListener('message', (e) => this.onmessage(e));
@@ -119,7 +123,29 @@ class Online {
         } else {
             this.cameraChanger.toFish();
         }
+        const foodPositions = [];
         const rand = new Rand(seed);
+
+        const NUM_FOOD = 20;
+        const BOUNDS_xz = 50;
+        const BOUNDS_y = 30;
+        for (let i = 0; i < NUM_FOOD; i++) {
+            const x = rand.getNext() * 2 * BOUNDS_xz - BOUNDS_xz;
+            const y = rand.getNext() * BOUNDS_y;
+            const z = rand.getNext() * 2 * BOUNDS_xz - BOUNDS_xz;
+            foodPositions.push(new Vector3(x,y,z));
+        }
+
+        const NUM_SCHOOLS = 50;
+        const schoolPositions = [];
+        for (let i = 0; i < NUM_SCHOOLS; i++) {
+            const x = rand.getNext() * 2 * BOUNDS_xz - BOUNDS_xz;
+            const y = rand.getNext() * BOUNDS_y;
+            const z = rand.getNext() * 2 * BOUNDS_xz - BOUNDS_xz;
+            schoolPositions.push(new Vector3(x,y,z));
+        }
+
+        this.onReady(schoolPositions, foodPositions);
     }
 }
 
@@ -131,7 +157,7 @@ class Rand {
 
     getNext() {
         this.curr = Rand.hashCode(this.curr.toString());
-        return 1 + this.curr / 2147483647;
+        return (this.curr / 2147483647 + 1) / 2;
     }
 
     setSeed(seed) {

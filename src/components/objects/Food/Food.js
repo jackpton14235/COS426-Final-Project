@@ -8,7 +8,7 @@ const foodShape = (geometry, material) => {
 };
 
 class Food extends Group {
-    constructor(parent, fish, foodGeometry, foodMaterial) {
+    constructor(parent, fish, foodGeometry, foodMaterial, foodPositions) {
         // Call parent Group() constructor
         super();
 
@@ -20,12 +20,7 @@ class Food extends Group {
         const BOX_SIZE = 100;  // 100
 
         let count = 0;
-        while (count < NUM_FOOD) {
-            const pos = new Vector3(
-                Math.random(),
-                Math.random(),
-                Math.random()
-            ).multiplyScalar(BOX_SIZE);
+        for (const pos of foodPositions) {
             const food = foodShape(foodGeometry, foodMaterial);
             food.position.set(pos.x, (pos.y)/5, pos.z);
             this.add(food);
