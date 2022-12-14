@@ -27,6 +27,8 @@ import SphereCollider from '../SphereCollider';
 const sand = require('./sand.jpg');
 const audio = require('./food.mp3');
 const foodCollected = new Audio(audio);
+const audioTwo = require('./monsterbite.mp3');
+const sharkMusic = new Audio(audioTwo);
 require('./fishMod/textures/Default_OBJ.001_baseColor.png');
 require('./fishMod/textures/Default_OBJ.001_metallicRoughness.png');
 require('./fishMod/textures/Default_OBJ.001_normal.png');
@@ -287,7 +289,7 @@ class UnderwaterScene extends Scene {
             1,
             () => {
                 console.log('Fish eaten');
-                foodCollected.play();
+                sharkMusic.play();
                 online.sharkWin();
                 hud.setMainText('Shark Wins!');
             },
