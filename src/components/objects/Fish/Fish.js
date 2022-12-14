@@ -1,8 +1,13 @@
 import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Vector3 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-require('./fish/textures/fish_baseColor.png');
-require('./fish/scene.bin');
-const fishChar = require('./fish/scene.gltf');
+// require('./fish/textures/fish_baseColor.png');
+
+require('./fishMod/textures/Default_OBJ.001_baseColor.png');
+require('./fishMod/textures/Default_OBJ.001_metallicRoughness.png');
+require('./fishMod/textures/Default_OBJ.001_normal.png');
+require('./fishMod/textures/Eyes_baseColor.png');
+require('./fishMod/scene.bin');
+const fishChar = require('./fishMod/scene.gltf');
 
 
 
@@ -19,7 +24,7 @@ class Fish extends Group {
         };
 
         // Load object
-        const loader = new GLTFLoader();
+        // const loader = new GLTFLoader();
 
         this.name = 'fish';
         // loader.load(MODEL, (gltf) => {
@@ -32,9 +37,11 @@ class Fish extends Group {
         // Load object TODO: GIVE CREDIT
         const gltfLoader = new GLTFLoader();
         gltfLoader.load(fishChar, (gltf) => {
-            gltf.scene.scale.set(.3,.3,.3)
             this.add(gltf.scene);
+            gltf.scene.scale.set(.005,.005,.005);
+            gltf.scene.position.set(0,0,0);
         });
+        
         if (camera) {
             this.add(camera);
             camera.position.z = -10;

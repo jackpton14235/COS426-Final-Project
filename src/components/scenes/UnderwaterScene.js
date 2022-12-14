@@ -221,7 +221,7 @@ class UnderwaterScene extends Scene {
             new SphereGeometry( 0.2, 0.2, 0.2 ),
             new MeshBasicMaterial({ color: 0xFFD700 })
         );
-        this.add(oceanFloor, shark, fish, lights, food, school);
+        this.add(oceanFloor, shark, fish, lights, food);
 
         // add colliders
         const sharkFishCollider = new SphereCollider(shark, new Vector3(0,0,1), 1.5, fish, new Vector3(0,0,0), 1, () => {

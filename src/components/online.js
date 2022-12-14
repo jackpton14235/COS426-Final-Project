@@ -8,7 +8,7 @@ class Online {
         this.inGame = false;
         this.opponentPos = new Vector3(0,0,0);
         this.opponentRot = new Euler(0,0,0);
-        this.isShark = Math.random() < .5;
+        this.isShark = false;// Math.random() < .5;
         this.cameraChanger = cameraChanger;
 
         this.socket.addEventListener('open', (e) => this.onopen(e));
@@ -40,7 +40,17 @@ class Online {
         )
     }
 
+    fishWin() {
+        this.socket.send(
+            JSON.stringify({
+                action: 'fishWin',
+                id: this.seed
+            })
+        )
+    }
+
     score() {
+        if (this.hud.score >= 10) this.fishWin();
         this.socket.send(
             JSON.stringify({
                 action: 'score',

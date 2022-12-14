@@ -62,7 +62,8 @@ class Container extends Group {
             this.position.add(fishForward);
 
             const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 1) * (Math.PI / 10));
-            this.state.fish.update(timeStamp, isShark, maxTiltDown);
+            const maxTiltUp = Math.min(-MAX_TILT, (30 - this.position.y) * (Math.PI / 10));
+            this.state.fish.update(timeStamp, isShark, maxTiltDown, maxTiltUp);
             if (this.state.viewChange) {
                 cameraChanger.toOverhead();
             } else {
