@@ -3,7 +3,7 @@ import { Euler, TriangleFanDrawMode, Vector3 } from 'three';
 class Online {
     constructor(hud, cameraChanger) {
         this.hud = hud;
-        this.socket = new WebSocket('ws://localhost:7777');
+        this.socket = new WebSocket('ws://cos-426-final-server.onrender.com');
         this.seed = 0;
         this.inGame = false;
         this.opponentPos = new Vector3(0, 0, 0);
