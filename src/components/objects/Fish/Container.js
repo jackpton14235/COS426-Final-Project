@@ -74,7 +74,6 @@ class Container extends Group {
             this.position.copy(opponentPos);
             this.rotation.y = opponentRot.y;
         }
-        console.log(this.rotation, this.state.fish.rotation);
     }
 }
 
