@@ -176,7 +176,7 @@ class Online {
             schoolDirections.push(rand.getNext() * Math.PI * 2);
         }
 
-        this.onReady(schoolPositions, schoolDirections, foodPositions);
+        this.onReady(schoolPositions, schoolDirections, foodPositions, rand);
     }
 }
 

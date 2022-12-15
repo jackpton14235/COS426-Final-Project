@@ -218,7 +218,7 @@ class UnderwaterScene extends Scene {
 
         // gets run once online game is ready so stuff can be generated
         // using the given seed
-        online.onReady = (schoolPositions, schoolDirections, foodPositions) => {
+        online.onReady = (schoolPositions, schoolDirections, foodPositions, rand) => {
             // load the fish model for schools
             const gltfLoader = new GLTFLoader();
             gltfLoader.load(fishChar, (gltf) => {
@@ -232,7 +232,8 @@ class UnderwaterScene extends Scene {
                         this,
                         gltf.scene,
                         schoolPositions[i],
-                        schoolDirections[i]
+                        schoolDirections[i],
+                        rand
                     );
                     this.add(school);
                     i++;

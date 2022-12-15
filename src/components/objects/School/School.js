@@ -8,12 +8,14 @@ require('./fishMod/scene.bin');
 const fishChar = require('./fishMod/scene.gltf');
 
 class School extends Group {
-    constructor(parent, model, pos, rot) {
+    constructor(parent, model, pos, rot, rand) {
         // Call parent Group() constructor
         super();
 
         const NUM_FISH = 5; //20
         const BOX_SIZE = 5;
+
+        this.state = { rand };
 
         let count = 0;
         while (count < NUM_FISH) {
@@ -39,44 +41,17 @@ class School extends Group {
 
     update(timeStamp, isShark) {
         this.translateZ(0.05);
-        // if (this.position.x > 50) {
-        //     const amin = Math.PI / 2;
-        //     const amax = 3 * Math.PI / 2;
-        //     const a = amin + (amax - amin) * Math.random();
-        //     this.rotation.y = a;
-        //     this.position.x = 50;
-        // }
-        // if (this.position.x < -50) {
-        //     const amin = 3 * Math.PI / 2;
-        //     const amax = 5 * Math.PI / 2;
-        //     const a = amin + (amax - amin) * Math.random();
-        //     this.rotation.y = a;
-        //     this.position.x = -50;
-        // }
-        // if (this.position.z > 50) {
-        //     const amin = Math.PI;
-        //     const amax = 2 * Math.PI;
-        //     const a = amin + (amax - amin) * Math.random();
-        //     this.rotation.y = a;
-        //     this.position.z = 50;
-        // }
-        // if (this.position.z < -50) {
-        //     const amin = 0;
-        //     const amax = Math.PI;
-        //     const a = amin + (amax - amin) * Math.random();
-        //     this.rotation.y = a;
-        //     this.position.z = -50;
-        // }
-        const radius_squared = 2500; // r = 50 * sqrt(2)
+        const radius_squared = 5000; // r = 50 * sqrt(2)
         const tempPos = new Vector3(this.position.x, 0, this.position.z);
         if (tempPos.dot(tempPos) > radius_squared) {
             // find angle around circle that this school is at
             const a = Math.atan(this.position.x / this.position.z);
-            const new_a = (Math.PI / 2 * Math.random()) + a + 3 * Math.PI / 4;
+            const r = this.state.rand.getNext(); // procedural random number
+            const new_a = (Math.PI / 2 * r) + a + 3 * Math.PI / 4;
             const x = Math.sin(new_a);
             const z = Math.cos(new_a);
             this.lookAt(new Vector3(x, this.position.y, z));
-            this.position.normalize().multiplyScalar(50);
+            this.position.normalize().multiplyScalar(70.71); // sqrt(5000)
         }
     }
 }
