@@ -1,0 +1,434 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 1118,
+      "max": [
+        0.5905911326408386,
+        0.6922469139099121,
+        0.3622620701789856
+      ],
+      "min": [
+        -0.5905911326408386,
+        0.41240614652633667,
+        -0.19324781000614166
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 13416,
+      "componentType": 5126,
+      "count": 1118,
+      "max": [
+        0.9999469518661499,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -0.9999469518661499,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 1118,
+      "max": [
+        1.000000238418579,
+        1.0
+      ],
+      "min": [
+        0.0,
+        0.0
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 5760,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 26832,
+      "componentType": 5126,
+      "count": 8581,
+      "max": [
+        1.5660500526428223,
+        1.783750057220459,
+        1.781000018119812
+      ],
+      "min": [
+        -1.5645300149917603,
+        -0.9543330073356628,
+        -2.799499988555908
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 129804,
+      "componentType": 5126,
+      "count": 8581,
+      "max": [
+        0.9999863505363464,
+        0.9978824257850647,
+        0.9998012781143188
+      ],
+      "min": [
+        -0.9998795390129089,
+        -0.9999997615814209,
+        -0.999919593334198
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 8581,
+      "max": [
+        0.9998375177383423,
+        0.9074681997299194,
+        0.9999580383300781,
+        1.0
+      ],
+      "min": [
+        -0.999983549118042,
+        -0.9856427311897278,
+        -0.9993061423301697,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 8944,
+      "componentType": 5126,
+      "count": 8581,
+      "max": [
+        0.9922859072685242,
+        0.9997349977493286
+      ],
+      "min": [
+        0.0002649808884598315,
+        0.0002649808884598315
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 77592,
+      "componentType": 5126,
+      "count": 8581,
+      "max": [
+        0.9922859072685242,
+        0.9997349977493286
+      ],
+      "min": [
+        0.0002649808884598315,
+        0.0002649808884598315
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 23040,
+      "componentType": 5125,
+      "count": 47991,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "ErickJohnP (https://sketchfab.com/ErickJohnP)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/fish-83036df81d05423dab94d4d12b3166e5",
+      "title": "Fish"
+    },
+    "generator": "Sketchfab-12.68.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 215004,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 146240,
+      "byteOffset": 215004,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 232776,
+      "byteOffset": 361244,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 137296,
+      "byteOffset": 594020,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 731316,
+      "uri": "scene.bin"
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_clearcoat"
+  ],
+  "images": [
+    {
+      "uri": "textures/Eyes_baseColor.png"
+    },
+    {
+      "uri": "textures/Default_OBJ.001_baseColor.png"
+    },
+    {
+      "uri": "textures/Default_OBJ.001_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Default_OBJ.001_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatFactor": 1.0,
+          "clearcoatRoughnessFactor": 0.04
+        }
+      },
+      "name": "Eyes",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.1590147198
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Default_OBJ.001",
+      "normalTexture": {
+        "index": 3,
+        "scale": 0.3
+      },
+      "occlusionTexture": {
+        "index": 2,
+        "strength": 0.5
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicFactor": 0.0,
+        "metallicRoughnessTexture": {
+          "index": 2
+        },
+        "roughnessFactor": 0.4
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Eyes_Eyes_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Fish_Low_Default OBJ.001_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 5,
+            "POSITION": 4,
+            "TANGENT": 6,
+            "TEXCOORD_0": 7,
+            "TEXCOORD_1": 8
+          },
+          "indices": 9,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "8c70f6bfe6d44d5d8e4a75cfa4999d0d.fbx"
+    },
+    {
+      "children": [
+        3,
+        5
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        -139.07353210448161,
+        -1.3757748059704744e-12,
+        5.415723296670271e-05,
+        0.0,
+        9.700131751011998e-05,
+        1.880617709616776e-05,
+        249.095367431621,
+        0.0,
+        -4.930527054641871e-12,
+        125.48298645019494,
+        -9.47370192629439e-06,
+        0.0,
+        2.9103830456733704e-09,
+        0.0,
+        -2.9802322387695313e-06,
+        1.0
+      ],
+      "name": "Eyes"
+    },
+    {
+      "mesh": 0,
+      "name": "Eyes_Eyes_0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Fish_Low"
+    },
+    {
+      "mesh": 1,
+      "name": "Fish_Low_Default OBJ.001_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    }
+  ]
+}
