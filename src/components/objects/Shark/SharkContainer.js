@@ -30,18 +30,18 @@ class SharkContainer extends Group {
 
     update(timeStamp, isShark, opponentPos, opponentRot) {
         if (isShark) {
-            this.rotateY(-this.state.moveX / 40);
+            this.rotateY(-this.state.moveX / 50);
             const sharkForward = new Vector3();
             this.state.shark.getWorldDirection(sharkForward);
             sharkForward.multiplyScalar(0.20);
             this.position.add(sharkForward);
 
-            const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 1) * (Math.PI / 10));
-            this.state.shark.update(timeStamp, isShark, maxTiltDown) 
+            const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 2) * (Math.PI / 10));
+            this.state.shark.update(timeStamp, isShark, maxTiltDown, opponentRot.z) 
         }  else {
             // update from server
             this.position.copy(opponentPos);
-            this.rotation.copy(opponentRot);
+            this.rotation.y = opponentRot.y;
         }
     }
 }

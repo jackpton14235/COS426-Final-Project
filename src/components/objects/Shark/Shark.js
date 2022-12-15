@@ -34,12 +34,6 @@ class Shark extends Group {
         });
 
         this.name = 'shark';
-        // });
-        
-        const geometry = new BoxGeometry(1, 1, 1);
-        const material = new MeshBasicMaterial({ color: 0x003377 });
-        const cube = new Mesh(geometry, material);
-        this.add(cube);
 
         if (camera) {
             this.add(camera);
@@ -59,12 +53,14 @@ class Shark extends Group {
             parent.addToUpdateList(this);
     }
 
-    update(timeStamp, isShark, maxTiltDown) {
+    update(timeStamp, isShark, maxTiltDown, rotZ) {
         if (isShark) {
             this.rotateX(-this.state.moveY / 50);
             if (this.rotation.x > maxTiltDown) {
                 this.rotation.x = maxTiltDown;
             }
+        } else {
+            this.rotation.z = rotZ;
         }
     }
 }

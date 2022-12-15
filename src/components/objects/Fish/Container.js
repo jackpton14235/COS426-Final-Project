@@ -55,15 +55,15 @@ class Container extends Group {
 
     update(timeStamp, isShark, opponentPos, opponentRot, cameraChanger) {
         if (!isShark){
-            this.rotateY(-this.state.moveX / 100);
+            this.rotateY(-this.state.moveX / 30);
             const fishForward = new Vector3();
             this.state.fish.getWorldDirection(fishForward);
-            fishForward.multiplyScalar(this.state.boost? .1 : .05);
+            fishForward.multiplyScalar(this.state.boost? .15 : .05);
             this.position.add(fishForward);
 
             const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 1) * (Math.PI / 10));
             const maxTiltUp = Math.max(-MAX_TILT, (this.position.y - 30) * (Math.PI / 10));
-            this.state.fish.update(timeStamp, isShark, maxTiltDown, maxTiltUp);
+            this.state.fish.update(timeStamp, isShark, maxTiltDown, maxTiltUp, opponentRot.z);
             if (this.state.viewChange) {
                 cameraChanger.toOverhead();
             } else {
@@ -72,7 +72,7 @@ class Container extends Group {
         }  else {
             // update from server
             this.position.copy(opponentPos);
-            this.rotation.copy(opponentRot);
+            this.rotation.y = opponentRot.y;
         }
     }
 }

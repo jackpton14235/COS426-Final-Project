@@ -27,6 +27,7 @@ import SphereCollider from '../SphereCollider';
 const sand = require('./sand.jpg');
 const audio = require('./food.mp3');
 const foodCollected = new Audio(audio);
+foodCollected.volume = 0.3;
 const audioTwo = require('./monsterbite.mp3');
 const sharkMusic = new Audio(audioTwo);
 const audioThree = require('./gameMusic.mp3');
@@ -39,8 +40,6 @@ require('./fishMod/textures/Default_OBJ.001_normal.png');
 require('./fishMod/textures/Eyes_baseColor.png');
 require('./fishMod/scene.bin');
 const fishChar = require('./fishMod/scene.gltf');
-
-
 
 const FOG_COLOR = 0x0083bf;
 
@@ -177,8 +176,7 @@ class UnderwaterScene extends Scene {
 
         // Init state
         this.state = {
-            gui: new Dat.GUI(), // Create GUI for scene
-            Music: true,
+            hud: hud,
             updateList: [],
             colliders: [],
             uniforms: {
@@ -205,9 +203,6 @@ class UnderwaterScene extends Scene {
         // Set background to a nice color
         this.background = new Color(FOG_COLOR);
 
-        // music ?
-        this.state.gui.add(this.state, 'Music');
-
         // Add meshes to scene
         const oceanFloor = OceanFloor(this.state.uniforms);
         const lights = new BasicLights();
@@ -223,7 +218,7 @@ class UnderwaterScene extends Scene {
 
         // gets run once online game is ready so stuff can be generated
         // using the given seed
-        online.onReady = (schoolPositions, foodPositions) => {
+        online.onReady = (schoolPositions, schoolDirections, foodPositions) => {
             // load the fish model for schools
             const gltfLoader = new GLTFLoader();
             gltfLoader.load(fishChar, (gltf) => {
@@ -236,7 +231,8 @@ class UnderwaterScene extends Scene {
                     const school = new School(
                         this,
                         gltf.scene,
-                        schoolPositions[i]
+                        schoolPositions[i],
+                        schoolDirections[i]
                     );
                     this.add(school);
                     i++;
@@ -244,17 +240,20 @@ class UnderwaterScene extends Scene {
 
                 // set fish and shark positions apart from each other
                 this.state.fish.position.copy(schoolPositions[0]);
+                this.state.fish.rotation.y = schoolDirections[0];
                 let dist = 0;
                 let sharkPos = new Vector3(0, 0, 0);
                 while (dist < 20) {
                     sharkPos.set(
-                        (Math.random() - 1) * 100,
+                        (Math.random() - 0.5) * 100,
                         Math.random() * 25 + 2,
-                        (Math.random() - 1) * 100
+                        (Math.random() - 0.5) * 100
                     );
                     dist = sharkPos.clone().sub(schoolPositions[0]).length();
                 }
                 this.state.shark.position.copy(sharkPos);
+                console.log('school', schoolPositions[i]);
+                console.log('shark', sharkPos);
 
                 // add food to the scene
                 const food = new Food(
@@ -277,35 +276,46 @@ class UnderwaterScene extends Scene {
                         1,
                         () => {
                             console.log('Fish food');
-                            foodCollected.play();
+                            if (hud.getMusicStatus()) {
+                                foodCollected.play();
+                            }
                             food.children[i].visible = false;
-                            online.score();
                             hud.incrementScore();
+                            online.score();
                         },
                         true
                     );
                     this.state.colliders.push(fishFoodCollider);
                 }
+
+                console.log(this.state.fish.position);
+                console.log(this.state.shark.position);
+                // add collider for shark and fish
+                console.log('Adding sphere collider', Date.now());
+                const sharkFishCollider = new SphereCollider(
+                    shark,
+                    new Vector3(0, 0, 1),
+                    1.5,
+                    fish,
+                    new Vector3(0, 0, 0),
+                    1,
+                    () => {
+                        console.log('Fish eaten');
+                        if (hud.getMusicStatus()) {
+                            sharkMusic.play();
+                        }
+                        console.log('collision', online.inGame, Date.now());
+                        if (online.inGame) {
+                            console.log("From inside")
+                            online.sharkWin();
+                        }
+                        hud.setMainText('Shark Wins!');
+                    },
+                    true
+                );
+                this.state.colliders.push(sharkFishCollider);
             });
         };
-
-        // add collider for shark and fish
-        const sharkFishCollider = new SphereCollider(
-            shark,
-            new Vector3(0, 0, 1),
-            1.5,
-            fish,
-            new Vector3(0, 0, 0),
-            1,
-            () => {
-                console.log('Fish eaten');
-                sharkMusic.play();
-                online.sharkWin();
-                hud.setMainText('Shark Wins!');
-            },
-            true
-        );
-        this.state.colliders.push(sharkFishCollider);
     }
 
     addToUpdateList(object) {
@@ -314,6 +324,7 @@ class UnderwaterScene extends Scene {
 
     update(timeStamp) {
         const {
+            hud,
             updateList,
             online,
             uniforms,
@@ -334,17 +345,17 @@ class UnderwaterScene extends Scene {
             );
         }
 
-        gameMusic.play();
-        if(this.Music) {
-            console.log('heheh');
+        if (hud.getMusicStatus()) {
             gameMusic.play();
+        } else {
+            gameMusic.pause();
         }
 
         // send coordinates to server to update position for other client
         if (online.inGame)
             if (online.isShark)
-                online.sendCoords(shark.position, shark.rotation);
-            else online.sendCoords(fish.position, fish.rotation);
+                online.sendCoords(shark.position, {y: shark.rotation.y, z: shark.children[0].rotation.z});
+            else online.sendCoords(fish.position, {y: fish.rotation.y, z: fish.children[0].rotation.z});
 
         colliders.forEach((collider) => collider.checkCollision());
     }

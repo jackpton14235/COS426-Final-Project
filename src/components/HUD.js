@@ -26,6 +26,22 @@ class HUD {
         this.onlineStatus.style = 'position:absolute;bottom:0;right:1rem;'
         this.hud.appendChild(this.onlineStatus);
 
+        this.musicSelection = document.createElement('input');
+        this.musicSelection.type = 'checkbox';
+        this.musicSelection.name = 'Music?';
+        this.musicSelection.id = 'Music?';
+        this.musicLabel = document.createElement('label');
+        this.musicLabel.appendChild(this.musicSelection);
+        this.musicLabel.innerHTML = 'Music & Sound Effects?';
+        this.musicLabel.for = 'Music?'
+        this.musicLabel.style = 'position:absolute;top:1rem;right:3rem;'
+        this.musicSelection.style = 'position:absolute;top:1rem;right:1rem;'
+        this.hud.appendChild(this.musicSelection);
+        this.hud.appendChild(this.musicLabel);
+      
+        
+        this.musicStatus
+
         this.scoreCount = 0;
         this.score = document.createElement('h3');
         this.score.innerHTML = 0;
@@ -34,6 +50,10 @@ class HUD {
 
         this.isShark = false;
         
+    }
+
+    getMusicStatus() {
+        return this.musicSelection.checked;
     }
 
     setSharkStatus(b) {

@@ -1,4 +1,4 @@
-import { Euler, TriangleFanDrawMode, Vector3 } from "three";
+import { Euler, TriangleFanDrawMode, Vector3 } from 'three';
 
 class Online {
     constructor(hud, cameraChanger) {
@@ -6,9 +6,9 @@ class Online {
         this.socket = new WebSocket('ws://localhost:7777');
         this.seed = 0;
         this.inGame = false;
-        this.opponentPos = new Vector3(0,0,0);
-        this.opponentRot = new Euler(0,0,0);
-        this.isShark = false;// Math.random() < .5;
+        this.opponentPos = new Vector3(0, 0, 0);
+        this.opponentRot = { y: 0, z: 0 };
+        this.isShark = false; // Math.random() < .5;
         this.cameraChanger = cameraChanger;
         this.onReady;
 
@@ -29,42 +29,53 @@ class Online {
 
     sendCoords(position, rotation) {
         if (this.socket.readyState !== WebSocket.OPEN) return;
-        this.socket.send(JSON.stringify({action: "coords", id: this.seed, coords: {
-            pos: position,
-            rot: rotation
-        }}))
+        this.socket.send(
+            JSON.stringify({
+                action: 'coords',
+                id: this.seed,
+                coords: {
+                    pos: position,
+                    rot: rotation,
+                },
+            })
+        );
     }
 
     sharkWin() {
+        console.log('shark from here')
         this.socket.send(
             JSON.stringify({
                 action: 'sharkWin',
-                id: this.seed
+                id: this.seed,
             })
-        )
+        );
     }
 
     fishWin() {
+        console.log('From here');
+        this.hud.setMainText('Fish Wins!');
         this.socket.send(
             JSON.stringify({
                 action: 'fishWin',
-                id: this.seed
+                id: this.seed,
             })
-        )
+        );
     }
 
     score() {
-        if (this.hud.score >= 10) this.fishWin();
+        console.log("Sending score")
+        console.log(this.hud.scoreCount);
+        if (this.hud.scoreCount >= 10 && this.inGame) this.fishWin();
         this.socket.send(
             JSON.stringify({
                 action: 'score',
-                id: this.seed
+                id: this.seed,
             })
-        )
+        );
     }
 
     onopen(event) {
-        console.log("Opened")
+        console.log('Opened');
     }
 
     onmessage(event) {
@@ -90,11 +101,21 @@ class Online {
                 this.inGame = true;
                 this.hud.setOnlineStatus(`In lobby ${this.seed}`);
                 this.buildFromSeed(json.seed, json.id);
+                this.hud.scoreCount = -1;
+                this.hud.incrementScore();
+                this.hud.setMainText(undefined);
                 console.log('starting', this.seed);
                 break;
             case 'coords': {
-                this.opponentPos = new Vector3(json.coords.pos.x, json.coords.pos.y, json.coords.pos.z);
-                this.opponentRot = new Euler(json.coords.rot.x, json.coords.rot.y, json.coords.rot.z)
+                this.opponentPos = new Vector3(
+                    json.coords.pos.x,
+                    json.coords.pos.y,
+                    json.coords.pos.z
+                );
+                this.opponentRot = {
+                    y: json.coords.rot.y,
+                    z: json.coords.rot.z,
+                };
                 break;
             }
             case 'score': {
@@ -105,8 +126,16 @@ class Online {
                 this.inGame = false;
                 this.hud.setOnlineStatus('Waiting for opponent');
                 this.startGame();
+                break;
             case 'sharkWin':
+                console.log(event.data)
+                console.log('Shark not from here');
                 this.hud.setMainText('Shark Wins!');
+                break;
+            case 'fishWin':
+                console.log(event.data)
+                console.log('Not from here');
+                this.hud.setMainText('Fish Wins!');
                 break;
             default:
                 console.log('action not recognized:', json.action);
@@ -117,7 +146,7 @@ class Online {
     buildFromSeed(seed, id) {
         this.isShark = seed % 2 === id;
         this.hud.setSharkStatus(this.isShark);
-        console.log("Chosen as", this.isShark? "shark" : "fish")
+        console.log('Chosen as', this.isShark ? 'shark' : 'fish');
         if (this.isShark) {
             this.cameraChanger.toShark();
         } else {
@@ -133,19 +162,21 @@ class Online {
             const x = rand.getNext() * 2 * BOUNDS_xz - BOUNDS_xz;
             const y = rand.getNext() * BOUNDS_y;
             const z = rand.getNext() * 2 * BOUNDS_xz - BOUNDS_xz;
-            foodPositions.push(new Vector3(x,y,z));
+            foodPositions.push(new Vector3(x, y, z));
         }
 
         const NUM_SCHOOLS = 50;
         const schoolPositions = [];
+        const schoolDirections = [];
         for (let i = 0; i < NUM_SCHOOLS; i++) {
             const x = rand.getNext() * 2 * BOUNDS_xz - BOUNDS_xz;
             const y = rand.getNext() * BOUNDS_y;
             const z = rand.getNext() * 2 * BOUNDS_xz - BOUNDS_xz;
-            schoolPositions.push(new Vector3(x,y,z));
+            schoolPositions.push(new Vector3(x, y, z));
+            schoolDirections.push(rand.getNext() * Math.PI * 2);
         }
 
-        this.onReady(schoolPositions, foodPositions);
+        this.onReady(schoolPositions, schoolDirections, foodPositions);
     }
 }
 
@@ -176,7 +207,5 @@ class Rand {
         return hash;
     }
 }
-
-
 
 export default Online;
