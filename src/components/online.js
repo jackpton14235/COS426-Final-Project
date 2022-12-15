@@ -66,12 +66,12 @@ class Online {
         console.log("Sending score")
         console.log(this.hud.scoreCount);
         if (this.hud.scoreCount >= 10 && this.inGame) this.fishWin();
-        this.socket.send(
-            JSON.stringify({
-                action: 'score',
-                id: this.seed,
-            })
-        );
+        // this.socket.send(
+        //     JSON.stringify({
+        //         action: 'score',
+        //         id: this.seed,
+        //     })
+        // );
     }
 
     onopen(event) {
