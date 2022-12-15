@@ -63,7 +63,7 @@ class Container extends Group {
 
             const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 1) * (Math.PI / 10));
             const maxTiltUp = Math.max(-MAX_TILT, (this.position.y - 30) * (Math.PI / 10));
-            this.state.fish.update(timeStamp, isShark, maxTiltDown, maxTiltUp, opponentRot.z);
+            this.state.fish.update(timeStamp, isShark, maxTiltDown, maxTiltUp, opponentRot.x);
             if (this.state.viewChange) {
                 cameraChanger.toOverhead();
             } else {
@@ -74,6 +74,7 @@ class Container extends Group {
             this.position.copy(opponentPos);
             this.rotation.y = opponentRot.y;
         }
+        console.log(this.rotation, this.state.fish.rotation);
     }
 }
 

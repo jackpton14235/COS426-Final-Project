@@ -114,7 +114,7 @@ class Online {
                 );
                 this.opponentRot = {
                     y: json.coords.rot.y,
-                    z: json.coords.rot.z,
+                    x: json.coords.rot.x,
                 };
                 break;
             }

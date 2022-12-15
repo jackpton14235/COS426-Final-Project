@@ -89,7 +89,7 @@ class Fish extends Group {
         this.material.color.set(0x41bc66);
     }
 
-    update(timeStamp, isShark, maxTiltDown, maxTiltUp, rotZ) {
+    update(timeStamp, isShark, maxTiltDown, maxTiltUp, rotX) {
         if (!isShark) {
             this.rotateX(-this.state.moveY / 30);
             if (this.rotation.x > maxTiltDown) {
@@ -99,7 +99,7 @@ class Fish extends Group {
                 this.rotation.x = maxTiltUp;
             }
         } else {
-            this.rotation.z = rotZ;
+            this.rotation.x = rotX;
         }
     }
 }

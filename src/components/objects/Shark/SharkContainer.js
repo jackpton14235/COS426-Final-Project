@@ -37,7 +37,7 @@ class SharkContainer extends Group {
             this.position.add(sharkForward);
 
             const maxTiltDown = Math.min(MAX_TILT, (this.position.y - 2) * (Math.PI / 10));
-            this.state.shark.update(timeStamp, isShark, maxTiltDown, opponentRot.z) 
+            this.state.shark.update(timeStamp, isShark, maxTiltDown, opponentRot.x) 
         }  else {
             // update from server
             this.position.copy(opponentPos);

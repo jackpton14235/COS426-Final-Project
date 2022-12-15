@@ -355,8 +355,8 @@ class UnderwaterScene extends Scene {
         // send coordinates to server to update position for other client
         if (online.inGame)
             if (online.isShark)
-                online.sendCoords(shark.position, {y: shark.rotation.y, z: shark.children[0].rotation.z});
-            else online.sendCoords(fish.position, {y: fish.rotation.y, z: fish.children[0].rotation.z});
+                online.sendCoords(shark.position, {y: shark.rotation.y, x: shark.children[0].rotation.x});
+            else online.sendCoords(fish.position, {y: fish.rotation.y, x: fish.children[0].rotation.x});
 
         colliders.forEach((collider) => collider.checkCollision());
     }
