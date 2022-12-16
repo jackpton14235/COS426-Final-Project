@@ -34,7 +34,9 @@ class Fish extends Group {
         const material = new MeshBasicMaterial({ color: 0x663377 });
         // const cube = new Mesh(geometry, material);
         // this.add(cube);
-        // Load object TODO: GIVE CREDIT
+        // Load object TODO: 
+        // This work is based on "Fish" (https://sketchfab.com/3d-models/fish-83036df81d05423dab94d4d12b3166e5) by 
+        // ErickJohnP (https://sketchfab.com/ErickJohnP) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
         const gltfLoader = new GLTFLoader();
         gltfLoader.load(fishChar, (gltf) => {
             this.add(gltf.scene);
