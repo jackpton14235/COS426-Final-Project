@@ -24,7 +24,12 @@ class Shark extends Group {
 
         this.name = 'shark';
         
-        // Load object TODO: GIVE CREDIT
+        // Load object 
+        // citation for 3D model
+        //  This work is based on "Finn The Shark" 
+        // (https://sketchfab.com/3d-models/finn-the-shark-c60933a54ffd4a21a5853592daf19d55) 
+        // by XelaDoesArt (https://sketchfab.com/XelaDoesArt) licensed under CC-BY-4.0 
+        // (http://creativecommons.org/licenses/by/4.0/)
         const loader = new GLTFLoader();
         loader.load(scene, (gltf) => {
             console.log(gltf.scene)
