@@ -26,10 +26,16 @@ import SharkContainer from '../objects/Shark/SharkContainer';
 import SphereCollider from '../SphereCollider';
 const sand = require('./sand.jpg');
 const audio = require('./food.mp3');
+// “Success 1”, Leszek Szary. https://pixabay.com/sound-effects/success-1-6297/ 
+// license (https://pixabay.com/service/terms/#license)
 const foodCollected = new Audio(audio);
 foodCollected.volume = 0.3;
+// “Monster bite”, Soundmast123. https://pixabay.com/sound-effects/monster-bite-44538/
+// license (https://pixabay.com/service/terms/#license)
 const audioTwo = require('./monsterbite.mp3');
 const sharkMusic = new Audio(audioTwo);
+//“Game music”, Magntron. https://pixabay.com/sound-effects/gamemusic-6082/
+//license (https://pixabay.com/service/terms/#license)
 const audioThree = require('./gameMusic.mp3');
 const gameMusic = new Audio(audioThree);
 gameMusic.loop = true;
